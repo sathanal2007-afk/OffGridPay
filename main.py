@@ -117,10 +117,10 @@ def offline_payment(from_user: str, to_user: str, amount: float):
         "your_remaining_offline_budget": sender_wallet.current_balance
     }
 
-@app.get("/wallets/")
-def check_wallets():
-    return wallets_db
+from fastapi.responses import HTMLResponse
 
-@app.get("/queue/")
-def check_sync_queue():
-    return {"pending_queue": pending_sync_queue, "synced_history": transaction_history}
+# பிரண்ட்-எண்ட் UI-ஐ லோட் செய்ய ஒரு புது எண்ட்பாயிண்ட்
+@app.get("/", response_class=HTMLResponse)
+def read_root():
+    with open("index.html", "r", encoding="utf-8") as f:
+        return f.read()

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OffGridPay - Resilient Offline Ledger</title>
+    <!-- Tailwind CSS for clean and modern aesthetic -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0B0F19; }
+        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
+    </style>
+</head>
+<body class="text-gray-100 min-h-screen pb-12">
+
+    <!-- Header Section -->
+    <header class="max-w-6xl mx-auto px-6 pt-8 pb-4 flex justify-between items-center border-b border-gray-800">
+        <div>
+            <h1 class="text-2xl font-bold tracking-tight text-transparent bg-clip-text bg-gradient-to-r from-teal-400 to-emerald-400 flex items-center gap-2">
+                ⚡ OffGridPay
+            </h1>
+            <p class="text-xs text-gray-400 mt-0.5">Resilient Offline Mesh Architecture Simulation</p>
+        </div>
+        <!-- Environment Badges -->
+        <div id="status-banner" class="px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">
+            CONNECTED TO CORE NETWORK
+        </div>
+    </header>
+
+    <main class="max-w-6xl mx-auto px-6 mt-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <!-- Left Column: Controls and Budget Status -->
+        <div class="space-y-6 lg:col-span-1">
+            <!-- 1. SIMULATOR ENVIRONMENT CONTROLS -->
+            <div class="glass-card rounded-2xl p-6">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Simulation Controls</h2>
+                <div class="space-y-4">
+                    <div class="flex justify-between items-center bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <div>
+                            <p class="text-sm font-medium">Network Backbone</p>
+                            <span id="net-label" class="text-xs text-emerald-400">Online</span>
+                        </div>
+                        <button id="toggle-network" onclick="toggleNetwork()" class="w-12 h-6 rounded-full bg-emerald-500 p-0.5 transition-all relative">
+                            <div class="w-5 h-5 rounded-full bg-white shadow-md absolute right-0.5 top-0.5 transition-all"></div>
+                        </button>
+                    </div>
+
+                    <div class="flex justify-between items-center bg-gray-900/50 p-3 rounded-xl border border-gray-800">
+                        <div>
+                            <p class="text-sm font-medium">Bank CBS Gateway</p>
+                            <span id="bank-label" class="text-xs text-emerald-400">Online</span>
+                        </div>
+                        <button id="toggle-bank" onclick="toggleBank()" class="w-12 h-6 rounded-full bg-emerald-500 p-0.5 transition-all relative">
+                            <div class="w-5 h-5 rounded-full bg-white shadow-md absolute right-0.5 top-0.5 transition-all"></div>
+                        </button>
+                    </div>
+                </div>
+                <p class="text-[11px] text-gray-500 mt-4 italic">💡 Toggle off network or bank to simulate offline edge states live during presentation.</p>
+            </div>
+
+            <!-- 2. DEVICE LOCAL BUDGET VAULTS -->
+            <div class="glass-card rounded-2xl p-6">
+                <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider mb-4">Device Budget Vaults</h2>
+                <div class="space-y-4">
+                    <!-- Sathana's Device -->
+                    <div class="bg-gray-900/40 p-4 rounded-xl border border-gray-800/60">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-semibold text-teal-400">Sathana (You)</span>
+                            <span id="vault-sathana" class="text-lg font-bold text-gray-200">₹5,000.00</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-gradient-to-r from-teal-400 to-emerald-400 h-full w-[100%] transition-all duration-500"></div>
+                        </div>
+                        <p class="text-[10px] text-gray-500 mt-1">Predetermined Max Offline Budget: ₹5,000</p>
+                    </div>
+
+                    <!-- Machan's Device -->
+                    <div class="bg-gray-900/40 p-4 rounded-xl border border-gray-800/60">
+                        <div class="flex justify-between items-center">
+                            <span class="text-sm font-semibold text-gray-300">Machan</span>
+                            <span id="vault-machan" class="text-lg font-bold text-gray-200">₹2,000.00</span>
+                        </div>
+                        <div class="w-full bg-gray-800 h-1.5 rounded-full mt-2 overflow-hidden">
+                            <div class="bg-gray-600 h-full w-[100%] transition-all duration-500"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Center Column: The Seamless Payment Terminal -->
+        <div class="lg:col-span-2 space-y-6">
+            <div class="glass-card rounded-3xl p-8 relative overflow-hidden">
+                <div class="absolute top-0 right-0 w-32 h-32 bg-teal-500/5 rounded-full blur-2xl"></div>
+                
+                <h2 class="text-xl font-bold mb-6">Autonomous Cash Transfer Terminal</h2>
+                
+                <div class="space-y-5">
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Recipient Entity</label>
+                        <select id="to_user" class="w-full bg-gray-900/80 border border-gray-800 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-teal-500 text-gray-200">
+                            <option value="Machan">Machan (Peer Device Vault)</option>
+                            <option value="Sathana">Sathana (Self Device)</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Amount (INR)</label>
+                        <div class="relative">
+                            <span class="absolute left-4 top-3 text-gray-500 font-medium">₹</span>
+                            <input id="amount" type="number" placeholder="0.00" class="w-full bg-gray-900/80 border border-gray-800 rounded-xl pl-8 pr-4 py-3 text-lg font-bold focus:outline-none focus:border-teal-500 text-white">
+                        </div>
+                    </div>
+
+                    <button onclick="triggerPayment()" class="w-full bg-gradient-to-r from-teal-500 to-emerald-500 hover:from-teal-600 hover:to-emerald-600 text-gray-950 font-bold py-3.5 px-4 rounded-xl transition-all shadow-lg shadow-teal-500/10 text-center tracking-wide text-sm mt-2">
+                        EXECUTE SECURE TRANSACTION
+                    </button>
+                </div>
+            </div>
+
+            <!-- Real-time Queue and Reconciliation Pipeline Logs -->
+            <div class="glass-card rounded-2xl p-6">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-sm font-bold text-gray-400 uppercase tracking-wider">Distributed Sync Pipeline Queue</h2>
+                    <span id="queue-count" class="px-2 py-0.5 bg-gray-800 text-gray-400 rounded-md text-xs font-mono">0 PENDING</span>
+                </div>
+                
+                <!-- Transactions List Container -->
+                <div id="queue-list" class="space-y-3 max-h-60 overflow-y-auto pr-1">
+                    <p class="text-sm text-gray-500 text-center py-6 italic">No transactions processed in this session yet.</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- UI Interaction Scripts linking directly to our FastAPI endpoints -->
+    <script>
+        const API_URL = ""; // Render-ல லோக்கல் URL தேவையில்லை, தானா மேட்ச் ஆகிடும்
+        let isNetworkOnline = true;
+        let isBankOnline = true;
+
+        async function syncSystemState() {
+            try {
+                const response = await fetch(`${API_URL}/system/toggle?network=${isNetworkOnline}&bank=${isBankOnline}`, { method: 'POST' });
+                const data = await response.json();
+                updateUIState();
+                fetchSystemData();
+            } catch (err) { console.error("FastAPI Backend disconnected.", err); }
+        }
+
+        function toggleNetwork() {
+            isNetworkOnline = !isNetworkOnline;
+            const btn = document.getElementById('toggle-network').querySelector('div');
+            const label = document.getElementById('net-label');
+            if(isNetworkOnline) {
+                btn.className = "w-5 h-5 rounded-full bg-white shadow-md absolute right-0.5 top-0.5 transition-all";
+                document.getElementById('toggle-network').className = "w-12 h-6 rounded-full bg-emerald-500 p-0.5 transition-all relative";
+                label.innerText = "Online"; label.className = "text-xs text-emerald-400";
+            } else {
+                btn.className = "w-5 h-5 rounded-full bg-white shadow-md absolute left-0.5 top-0.5 transition-all";
+                document.getElementById('toggle-network').className = "w-12 h-6 rounded-full bg-gray-700 p-0.5 transition-all relative";
+                label.innerText = "Offline State"; label.className = "text-xs text-amber-500";
+            }
+            syncSystemState();
+        }
+
+        function toggleBank() {
+            isBankOnline = !isBankOnline;
+            const btn = document.getElementById('toggle-bank').querySelector('div');
+            const label = document.getElementById('bank-label');
+            if(isBankOnline) {
+                btn.className = "w-5 h-5 rounded-full bg-white shadow-md absolute right-0.5 top-0.5 transition-all";
+                document.getElementById('toggle-bank').className = "w-12 h-6 rounded-full bg-emerald-500 p-0.5 transition-all relative";
+                label.innerText = "Online"; label.className = "text-xs text-emerald-400";
+            } else {
+                btn.className = "w-5 h-5 rounded-full bg-white shadow-md absolute left-0.5 top-0.5 transition-all";
+                document.getElementById('toggle-bank').className = "w-12 h-6 rounded-full bg-gray-700 p-0.5 transition-all relative";
+                label.innerText = "Offline State"; label.className = "text-xs text-amber-500";
+            }
+            syncSystemState();
+        }
+
+        function updateUIState() {
+            const banner = document.getElementById('status-banner');
+            if (!isNetworkOnline || !isBankOnline) {
+                banner.innerText = "⚠️ MESH ARCHITECTURE RUNNING OFFLINE LEDGER";
+                banner.className = "px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-amber-500/10 text-amber-400 border border-amber-500/20 animate-pulse";
+            } else {
+                banner.innerText = "CONNECTED TO CORE BANK BANK NETWORK";
+                banner.className = "px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+            }
+        }
+
+        async function fetchSystemData() {
+            try {
+                // Fetch Wallets
+                const wRes = await fetch(`${API_URL}/wallets/`);
+                const wallets = await wRes.json();
+                document.getElementById('vault-sathana').innerText = `₹${wallets.Sathana.current_balance.toFixed(2)}`;
+                document.getElementById('vault-machan').innerText = `₹${wallets.Machan.current_balance.toFixed(2)}`;
+
+                // Fetch Queues
+                const qRes = await fetch(`${API_URL}/queue/`);
+                const qData = await qRes.json();
+                
+                const queueList = document.getElementById('queue-list');
+                document.getElementById('queue-count').innerText = `${qData.pending_queue.length} PENDING`;
+                
+                let html = "";
+                const allTx = [...qData.pending_queue, ...qData.synced_history];
+                
+                if (allTx.length === 0) {
+                    queueList.innerHTML = `<p class="text-sm text-gray-500 text-center py-6 italic">No transactions processed in this session yet.</p>`;
+                    return;
+                }
+
+                allTx.reverse().forEach(tx => {
+                    const isPending = tx.status === "OFFLINE_PENDING";
+                    html += `
+                        <div class="flex justify-between items-center p-3 rounded-xl bg-gray-900/60 border ${isPending ? 'border-amber-500/20' : 'border-gray-800'}">
+                            <div>
+                                <p class="text-sm font-medium text-gray-200">${tx.from_user} ➔ ${tx.to_user}</p>
+                                <p class="text-[10px] text-gray-500 font-mono">Block ID: #${tx.tx_id}</p>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-sm font-bold text-white">₹${tx.amount.toFixed(2)}</p>
+                                <span class="text-[10px] px-2 py-0.5 rounded ${isPending ? 'bg-amber-500/10 text-amber-400' : 'bg-emerald-500/10 text-emerald-400'}">
+                                    ${isPending ? '⏳ Off-Grid Pending' : '✓ Bank Reconciled'}
+                                </span>
+                            </div>
+                        </div>
+                    `;
+                });
+                queueList.innerHTML = html;
+            } catch (err) { console.error(err); }
+        }
+
+        async function triggerPayment() {
+            const toUser = document.getElementById('to_user').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            
+            if (!amount || amount <= 0) { alert("Please enter a valid amount."); return; }
+
+            try {
+                const response = await fetch(`${API_URL}/pay/offline?from_user=Sathana&to_user=${toUser}&amount=${amount}`, {
+                    method: 'POST'
+                });
+                if (!response.ok) {
+                    const errData = await response.json();
+                    alert(`Rejected: ${errData.detail}`);
+                    return;
+                }
+                document.getElementById('amount').value = "";
+                fetchSystemData();
+            } catch(err) {
+                alert("Cannot connect to backend server wrapper.");
+            }
+        }
+
+        // Initial trigger
+        setInterval(fetchSystemData, 2000);
+    </script>
+</body>
+</html>
